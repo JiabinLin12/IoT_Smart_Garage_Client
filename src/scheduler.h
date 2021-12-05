@@ -41,7 +41,12 @@ enum {
   no_event                  = 0,
   letimer_comp1_expired     = 1,
 
-  pb0_pressed = 2
+  pb0_pressed = 2,
+
+  procedure_completed=3,
+  connection_open = 4,
+  connection_close = 5,
+
 };
 
 

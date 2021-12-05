@@ -18,15 +18,21 @@
 
 typedef enum
 {
-   scanning,
-   sml_discover_services,
-   sml_discover_characteristics,
-   sml_enable_indication,
-   distance_discover_services,
-   distance_discover_characteristics,
-   distance_enable_indication,
-   running
- } conn_state_t;
+  SCANNING,
+
+  DISCOVER_SERVICES,
+
+  MD_DISCOVER_CHARACTERISTICS,
+  MD_ENABLE_INDICATIONS,
+
+  LS_DISCOVER_CHARACTERISTICS,
+  LS_ENABLE_INDICATIONS,
+
+  CL_DISCOVER_CHARACTERISTICS,
+  CL_ENABLE_INDICATION,
+
+  RUNNING
+ }discovery_state_t;
 
  void discovery_state_machine(sl_bt_msg_t *evt);
 

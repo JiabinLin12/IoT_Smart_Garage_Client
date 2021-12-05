@@ -15,7 +15,6 @@
 
 
 #include <stdbool.h>
-#include "irq.h"
 
 // Include logging for this file
 #define INCLUDE_LOG_DEBUG 1

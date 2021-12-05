@@ -56,30 +56,29 @@
 
 #define SM_CONFIG_FLAG      0x0F
 
+//connection events parameters
+#define MIN_CNT_INTERVAL    60       //min. cnt. interval (75ms / 1.25ms = 60)
+#define MAX_CNT_INVERVAL    60       //max. cnt. interval (75ms / 1.25ms = 60)
+#define SLAVE_LATENCY       4        //slave latency 4*75ms = 300ms
+#define SUPERVISON_TIMEOUT  800      //Supervision timeout((1 + latency) * max_interval * 2) = 45150us = 0.4515s ~ 5s
+                                     //700 accommodate the real latency of 90
+#define MIN_CNT_EVT_LENGTH  0
+#define MAX_CNT_EVT_LENGTH  0xffff
+
+//define for clients
+#define SCAN_INTERVAL                 80   //Value = 50ms / 0.625
+#define SCAN_WINDOW                   40   //Value = 25ms / 0.625
+#define SCAN_PASSIVE                  0
+
 #define PRINT_PARAMS        0
 typedef struct {
-  //value that are common to servers and clients
-  bool connection_enable;
 
-  //value unique for server
-  bool indication_in_flight;
-
-  bool htm_indication_enable;
-  bool motion_indication_enable;
-  bool light_indication_enable;
-
+  bool smart_garage_client_passkey_confirmation_require;
   bool smart_garage_bonded;
-
-  bool smart_garage_confirmation_require;
-
-  //value unique for client
-  uint8_t  connection_handle;
-  uint32_t sml_service_handle;
-  uint16_t sml_characteristic_handle;
-  uint32_t distance_service_handle;
-  uint16_t distance_characteristic_handle;
-  uint8_t  service_handle;
-  uint8_t  characteristic_handle;
+  uint8_t sg_service_handle;
+  uint8_t ls_characteristic_handle;
+  uint8_t cl_characteristic_handle;
+  uint8_t md_characteristic_handle;
 
 }ble_data_struct_t;
 

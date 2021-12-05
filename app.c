@@ -49,9 +49,6 @@
 #include "src/ble.h"
 
 #include "src/lcd.h"
-#include <src/sml_adc.h>
-
-#include <src/sml_state_machine.h>
 #include <src/client_state_machine.h>
 /*****************************************************************************
  * Application Power Manager callbacks
@@ -89,11 +86,9 @@ sl_power_manager_on_isr_exit_t app_sleep_on_isr_exit(void)
 SL_WEAK void app_init(void)
 {
   cmu_init();
-  letimer_init();
   gpioInit();
   si7021_enable();
-  PbCirQ_init();
-  initADC ();
+
 
 #if((LOWEST_ENERGY_MODE==EM1) || (LOWEST_ENERGY_MODE==EM2))
       sl_power_manager_add_em_requirement(LOWEST_ENERGY_MODE);
@@ -122,9 +117,7 @@ SL_WEAK void app_process_action(void)
 void sl_bt_on_event(sl_bt_msg_t *evt)
 {
    handle_ble_event(evt);
-
   
-   smart_light_state_machine(evt);
    discovery_state_machine(evt);
    
 } // sl_bt_on_event()
