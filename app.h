@@ -50,8 +50,7 @@
 #include "src/ble_device_type.h"
 #include "src/gpio.h"
 #include "src/lcd.h"
-#include "src/scheduler.h"
-#include "src/timers.h"
+
 
 // DOS: define this to print diagnostics
 #define DEBUG 0

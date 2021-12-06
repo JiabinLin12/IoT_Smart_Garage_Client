@@ -36,7 +36,7 @@
 #include "autogen/gatt_db.h"
 
 #include "ble_device_type.h"
-
+#include "client_state_machine.h"
 ble_data_struct_t ble_data;
 
 uint8_t connection_handle = 0xff;
@@ -72,13 +72,10 @@ const uint8_t sg_cl_characteristic[16] = {0x89, 0x62,0x13,0x2D,0x2A,0x65,0xEC,0x
  * **/
 bool uuid_verification(uint8_t get_uuid[], const uint8_t uuid_expect[], uint8_t len){
   for(int i=0; i<len; i++){
-      LOG_INFO("%x", get_uuid[i]);
       if(get_uuid[i]!=uuid_expect[i]){
-          LOG_INFO("xxxx");
           return false;
       }
   }
-  LOG_INFO("----");
   return true;
 }
 
@@ -94,6 +91,9 @@ bool address_verification(bd_addr addr, uint8_t addr_type){
   return false;
 }
 
+
+
+
 void client_response(sl_bt_msg_t *evt, uint8_t char_handle, uint8_t option){
   sl_status_t sc;
 
@@ -108,24 +108,30 @@ void client_response(sl_bt_msg_t *evt, uint8_t char_handle, uint8_t option){
          evt->data.evt_gatt_characteristic_value.att_opcode == sl_bt_gatt_handle_value_indication){
         switch(option){
           case 0:
-            if(evt->data.evt_gatt_characteristic_value.value.data[0]==0){
-               displayPrintf(DISPLAY_ROW_9, "Motion Detected");
-            }else if (evt->data.evt_gatt_characteristic_value.value.data[0]==1){
+            if(evt->data.evt_gatt_characteristic_value.value.data[1]==0){
                displayPrintf(DISPLAY_ROW_9, "No Motion Detected");
+               motion_state_Off();
+            }else if (evt->data.evt_gatt_characteristic_value.value.data[1]==1){
+               displayPrintf(DISPLAY_ROW_9, "Motion Detected");
+               motion_state_On();
             }
             break;
           case 1:
-            if(evt->data.evt_gatt_characteristic_value.value.data[0]==0){
-                displayPrintf(DISPLAY_ROW_9, "Light is On");
-            }else if (evt->data.evt_gatt_characteristic_value.value.data[0]==1){
-                displayPrintf(DISPLAY_ROW_9, "Light is Off");
+            if(evt->data.evt_gatt_characteristic_value.value.data[1]==0){
+                displayPrintf(DISPLAY_ROW_10, "Light Off");
+                light_state_Off();
+            }else if (evt->data.evt_gatt_characteristic_value.value.data[1]==1){
+                displayPrintf(DISPLAY_ROW_10, "Light On");
+                light_state_On();
             }
             break;
           case 2:
-            if(evt->data.evt_gatt_characteristic_value.value.data[0]==0){
-                displayPrintf(DISPLAY_ROW_9, "Car is on position");
-            }else if (evt->data.evt_gatt_characteristic_value.value.data[0]==1){
-                displayPrintf(DISPLAY_ROW_9, "Car is not on position");
+            if(evt->data.evt_gatt_characteristic_value.value.data[1]==0){
+                displayPrintf(DISPLAY_ROW_11, "Car Not On Spot");
+                car_lot_Off();
+            }else if (evt->data.evt_gatt_characteristic_value.value.data[1]==1){
+                displayPrintf(DISPLAY_ROW_11, "Car On Spot");
+                car_lot_On();
             }
             break;
           default:
@@ -276,11 +282,11 @@ void handle_ble_event(sl_bt_msg_t *evt){
 
      case  sl_bt_evt_sm_bonding_failed_id:
        ble_data_loc->smart_garage_bonded  = false;
-       LOG_ERROR("Bonding Failed");
+       LOG_ERROR("Bonding Failed, reason %x",evt->data.evt_sm_bonding_failed.reason);
        break;
 
      case sl_bt_evt_system_external_signal_id:
-       //Add push button stuff
+       button_state(evt);
        break;
 
      case sl_bt_evt_gatt_server_indication_timeout_id:
@@ -295,13 +301,11 @@ void handle_ble_event(sl_bt_msg_t *evt){
     case sl_bt_evt_gatt_service_id:
       if(uuid_verification(evt->data.evt_gatt_service.uuid.data,sg_service,16)){
           ble_data_loc->sg_service_handle =  evt->data.evt_gatt_service.service;
-          LOG_INFO("sg_service_handle=%d",ble_data_loc->sg_service_handle);
       }
       break;
 
     //discovered characteristic from a remote gatt database
     case sl_bt_evt_gatt_characteristic_id:
-      LOG_INFO("%d Hello",evt->data.evt_gatt_characteristic.uuid.len);
       if(uuid_verification(evt->data.evt_gatt_characteristic.uuid.data,sg_md_characteristic,16)){
           ble_data_loc->md_characteristic_handle = evt->data.evt_gatt_characteristic.characteristic;
       }

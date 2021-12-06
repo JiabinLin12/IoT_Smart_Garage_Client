@@ -34,7 +34,26 @@ typedef enum
   RUNNING
  }discovery_state_t;
 
+
+ typedef struct button_state{
+   bool button0_state;
+   bool button1_state;
+ } button_state_t;
  void discovery_state_machine(sl_bt_msg_t *evt);
 
 
+typedef enum pbstate_s{
+
+  no_event,
+
+  procedure_completed,
+  connection_open,
+  connection_close,
+  pb0_pressed,
+  pb1_pressed,
+}pbstate_t;
+
+void pb0_pressed_external_signal();
+void pb1_pressed_external_signal();
+ void button_state(sl_bt_msg_t *evt);
 #endif /* SRC_CLIENT_STATE_MACHINE_H_ */

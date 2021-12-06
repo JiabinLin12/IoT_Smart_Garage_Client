@@ -37,14 +37,12 @@
 
 
 #include "app.h"
-#include "src/timers.h"
 
 // Include logging for this file
 #define INCLUDE_LOG_DEBUG 1
 #include "src/log.h"
 
 #include "src/oscillators.h"
-#include "src/scheduler.h"
 
 #include "src/ble.h"
 
@@ -87,7 +85,7 @@ SL_WEAK void app_init(void)
 {
   cmu_init();
   gpioInit();
-  si7021_enable();
+  lcd_enable();
 
 
 #if((LOWEST_ENERGY_MODE==EM1) || (LOWEST_ENERGY_MODE==EM2))

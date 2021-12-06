@@ -75,10 +75,10 @@ typedef struct {
 
   bool smart_garage_client_passkey_confirmation_require;
   bool smart_garage_bonded;
-  uint8_t sg_service_handle;
-  uint8_t ls_characteristic_handle;
-  uint8_t cl_characteristic_handle;
-  uint8_t md_characteristic_handle;
+  uint32_t sg_service_handle;
+  uint32_t ls_characteristic_handle;
+  uint32_t cl_characteristic_handle;
+  uint32_t md_characteristic_handle;
 
 }ble_data_struct_t;
 

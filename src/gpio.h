@@ -36,17 +36,19 @@
 #define DISP_PIN            13
 
 
-//Smart Light Macro Define
-#define BREAK_BEAM_PORT     gpioPortD   //EXP_HEADER7
-#define BREAK_BEAM_PIN      10
-#define LIGHT_SENSOR_POWER_PORT   gpioPortD   //External Pin 11
-#define LIGHT_SENSOR_POWER_PIN    12
 
 
 
 
+#define LIGHT_STATE_PORT           gpioPortC
+#define LIGHT_STATE_PIN            9           // EXP10
+
+#define MOTION_DETECT_PORT         gpioPortA
+#define MOTION_DETECT_PIN          3           // EXP5
 
 
+#define CAR_LOT_PORT               gpioPortD
+#define CAR_LOT_PIN                10           // EXP7
 
 
 
@@ -58,11 +60,20 @@ void gpioLed1SetOn();
 void gpioLed1SetOff();
 void si7021_enable();
 void si7021_disable();
+void lcd_enable();
+void lcd_disable();
+void leds_on();
+void leds_off();
 void gpioSensorEnSetOn();
 void gpioSetDisplayExtcomin(bool status);
 void light_sensor_enable();
 void light_sensor_disable();
-//DOS
+void light_state_Off();
+void light_state_On();
+void motion_state_Off();
+void motion_state_On();
+void car_lot_Off();
+void car_lot_On();
 void ToggleLED0 (void);
 
 
